@@ -14,13 +14,20 @@ end
 function FormatPlacedProps(props)
     return table.map(props, function(prop)
         local data = GetPropFromModel(prop.model)
+
+        -- Ensure rotation is valid and has a fallback if not provided
+        local rotation = prop.rotation
+        if type(rotation) ~= "table" then
+            rotation = {x = 0, y = 0, z = 0} -- Default rotation
+        end
+
         return {
             id = prop.id,
             model = prop.model,
             name = data and data.name or prop.model,
-            location = json.encode(prop.location),
-            rotation = json.encode(prop.rotation),
-            metadata = json.encode(prop.metadata),
+            location = json.encode(prop.location or {}),
+            rotation = json.encode(rotation),
+            metadata = json.encode(prop.metadata or {}),
         }
     end)
 end
